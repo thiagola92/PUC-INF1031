@@ -1,7 +1,5 @@
 print("Passe três números")
-n1 = io.read("*n")
-n2 = io.read("*n")
-n3 = io.read("*n")
+n1, n2, n3 = io.read("*n", "*n", "*n")
 
 biggest = math.max(n1, n2, n3)
 smallest = math.min(n1, n2, n3)

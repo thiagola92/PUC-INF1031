@@ -1,23 +1,45 @@
 function love.load()
-  width, height = love.graphics.getDimensions()
 end
 
-function love.draw()
-  love.graphics.setBackgroundColor(1, 1, 1)
+function desenhar_relogio()
+  local horario = os.date("*t")
+  local width, height = love.graphics.getDimensions()
+  local pont_largura = 10
+  local angle = 0
+  love.graphics.setBackgroundColor(0.5, 0.5, 0.5)
+  love.graphics.translate(width/2, height/2)
   
-  love.graphics.setColor(0, 0, 0)
-  love.graphics.circle("line", width/2, height/2, 100)
-  
-  love.graphics.setColor(0, 0, 0.5)
-  love.graphics.circle("fill", width/2, height/2, 70)
-  love.graphics.circle("fill", width/2 + 75, height/2 - 75, 20)
-  
+  -- circulo
   love.graphics.setColor(1, 1, 1)
-  love.graphics.circle("fill", width/2 + 30, height/2 - 30, 20)
+  love.graphics.circle("fill", 0, 0, 250)
   
-  local fonte = love.graphics.newFont("Arial.ttf", 64)
-  local texto = love.graphics.newText(fonte, "Lua")
-  local tw, th = texto:getDimensions()
+  -- ponteiro dos segundos
+  print("seg", horario.sec)
+  angle = (2*math.pi/60) * horario.sec
+  love.graphics.rotate(angle)
+  love.graphics.setColor(1, 0, 0)
+  love.graphics.rectangle("fill", -pont_largura/2, 0, pont_largura, -250)
+  love.graphics.rotate(-angle)
   
-  love.graphics.draw(texto, (width-tw)/2, (height-th)/2 + 10)
+  -- ponteiro dos minutos
+  print("min", horario.min)
+  angle = (2*math.pi/60) * horario.min
+  love.graphics.setColor(0, 0, 1)
+  love.graphics.rotate(angle)
+  love.graphics.rectangle("fill", -pont_largura/2, 0, pont_largura, -200)
+  love.graphics.rotate(-angle)
+  
+  -- ponteiro das horas
+  print("hora", horario.hour)
+  angle = (2*math.pi/12) * horario.hour
+  love.graphics.setColor(0, 1, 0)
+  love.graphics.rotate(angle)
+  love.graphics.rectangle("fill", -pont_largura/2, 0, pont_largura, -150)
+  love.graphics.rotate(-angle)
 end
+
+
+function love.draw()
+  desenhar_relogio()
+end
+

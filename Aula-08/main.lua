@@ -67,7 +67,7 @@ function desenhar_horarios()
   love.graphics.setColor(0, 0, 0)
   love.graphics.translate(width/2, height/2)
 
-  local date = os.date("%x")
+  local date = string.format("%d/%d/%d", horario.day, horario.month, horario.year)
   local fonte_width = fonte:getWidth(date)
   love.graphics.print(date, -fonte_width/2)
 

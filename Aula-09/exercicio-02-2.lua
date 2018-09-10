@@ -24,33 +24,26 @@ function is_prime(number)
   return true
 end
 
-function print_primes(max, counter)
-  if(max >= 2) then
+function print_primes(counter)
+  if(counter >=1) then
     io.write(2)
-
+    
     counter = counter - 1
-    if(counter == 0) then
-      print()
-      return
-    end
   end
-
-  for i=3, max, 2 do
+  
+  local i = 3
+  while(counter ~= 0) do
     if(is_prime(i)) then
       io.write("," .. i)
-
       counter = counter - 1
-      if(counter == 0) then
-        break
-      end
     end
+    
+    i = i + 2
   end
-
+  
   print()
 end
 
-print("Diga até que número você quer saber os primos")
-number = io.read("*n")
 print("Diga quantos primos quer saber")
-max_primes = io.read("*n")
-print_primes(number, max_primes)
+number_of_primes = io.read("*n")
+print_primes(number_of_primes)

@@ -30,9 +30,9 @@ function love.draw()
   
 end
 
-function is_colliding(x, y, v)
-  local distance = math.sqrt((x - v.x)^2 + (y - v.y)^2)
-  return distance < v.r
+function is_colliding(x, y, circulo)
+  local distance = math.sqrt((x - circulo.x)^2 + (y - circulo.y)^2)
+  return distance < circulo.r
 end
 
 function love.mousepressed(x, y)
@@ -44,7 +44,7 @@ function love.mousepressed(x, y)
 end
 
 function love.keypressed(key)
-  directionX, drecetionY = 0, 0
+  directionX, directionY = 0, 0
   
   if love.keyboard.isDown("up") then
     directionY = -1

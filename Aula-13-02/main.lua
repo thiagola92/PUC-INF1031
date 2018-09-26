@@ -35,6 +35,29 @@ function is_colliding(x, y, circulo)
   return distance < circulo.r
 end
 
+function select_circle(s)
+  if(s == nil) then
+    return
+  end
+
+  for i=#selected, 1, -1 do
+    if(selected[i] == s) then
+      circles[s].selected = false
+      table.remove(selected, i)
+
+      return
+    end
+  end
+
+  circles[s].selected = true
+  table.insert(selected, s)
+
+  if(#selected > 2) then
+    circles[selected[1]].selected = false
+    table.remove(selected, 1)
+  end
+end
+
 function love.mousepressed(x, y)
   local s = nil
 
@@ -44,15 +67,37 @@ function love.mousepressed(x, y)
     end
   end
 
-  if(s ~= nil) then
-    if(#selected >= 2) then
-      table.remove(selected, 1)
-      circles[selected[1]].selected = not circles[s].selected
-    end
+  select_circle(s)
+end
 
-    circles[s].selected = not circles[s].selected
-    table.insert(selected, s)
+function move_circles(x, y)
+  local s1, s2 = selected[1], selected[2]
+
+  if(s1 ~= nil) then
+    circles[s1].x = circles[s1].x + deslocamento*x
+    circles[s1].y = circles[s1].y + deslocamento*y
   end
+
+  if(s2 ~= nil) then
+    circles[s2].x = circles[s2].x + deslocamento*x
+    circles[s2].y = circles[s2].y + deslocamento*y
+  end
+end
+
+function overlap(i, j)
+  local distanceX = circles[i].x - circles[j].x
+  local distanceY = circles[i].y - circles[j].y
+  local distance = math.sqrt(distanceX^2 + distanceY^2)
+  local distanceToCollide = distance - (circles[i].r + circles[j].r)
+
+  local x, y = 0, 0
+
+  if(distanceToCollide < 0) then
+    x = distanceX * distanceToCollide / distance
+    y = distanceY * distanceToCollide / distance
+  end
+
+  return x, y
 end
 
 function love.keypressed(key)
@@ -70,15 +115,15 @@ function love.keypressed(key)
     directionX = -1
   end
 
-  local s1, s2 = selected[1], selected[2]
-  
-  if(s1 ~= nil) then
-    circles[s1].x = circles[s1].x + deslocamento*directionX
-    circles[s1].y = circles[s1].y + deslocamento*directionY
+  if love.keyboard.isDown("a") and #selected == 2 then
+    local x, y = overlap(selected[1], selected[2])
+
+    circles[selected[1]].x = circles[selected[1]].x - x/2
+    circles[selected[2]].x = circles[selected[2]].x + x/2
+
+    circles[selected[1]].y = circles[selected[1]].y - y/2
+    circles[selected[2]].y = circles[selected[2]].y + y/2
   end
 
-  if(s2 ~= nil) then
-    circles[s2].x = circles[s2].x + deslocamento*directionX
-    circles[s2].y = circles[s2].y + deslocamento*directionY
-  end
+  move_circles(directionX, directionY)
 end

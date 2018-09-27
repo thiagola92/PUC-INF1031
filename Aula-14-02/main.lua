@@ -10,13 +10,13 @@ function love.load ()
     local r = math.random(10,40)
     local x = math.random(r,w-r)
     local y = math.random(r,h-r)
-    local color = {math.random(0,1*255), math.random(0,1*255), math.random(0,1*255)}
+    local color = {math.random(0,1), math.random(0,1), math.random(0,1)}
     table.insert(discs, {r = r, x = x, y = y, color = color})
   end
 
   delta = math.min (w,h)/10000
 
-  love.graphics.setBackgroundColor(0.75*255,0.75*255,0.75*255)
+  love.graphics.setBackgroundColor(0.75,0.75,0.75)
 end
 
 local function overlap (i, j)
@@ -108,7 +108,7 @@ function love.draw ()
 end
 
 function love.keypressed (key)
-  if key == " " or key == "space" then
+  if key == "space" then
     for k,_ in pairs(selected) do
       selected[k] = nil
     end

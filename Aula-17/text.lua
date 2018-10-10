@@ -15,7 +15,7 @@ function text.new(fontname, size, str)
   local meutexto = {}
 
   local fonte = love.graphics.newFont(fontname .. ".ttf", size)
-  --local texto = love.graphics.newText(fonte, str)
+  local texto = love.graphics.newText(fonte, str)
 
   meutexto.texto = texto
   meutexto.cor = cores.preto
@@ -25,10 +25,7 @@ function text.new(fontname, size, str)
 end
 
 function text.setString(obj, str)
-  local fonte = obj.getFont()
-  --local texto = love.graphics.newText(fonte, str)
-
-  meutexto.texto = texto
+  obj.texto.set(str)
 end
 
 local function setColorString(obj, str)
@@ -37,7 +34,7 @@ local function setColorString(obj, str)
     return
   end
 
-  if(cores.str == "random") then
+  if(str == "random") then
     local start = 1
     local stop = math.random(6)
 
@@ -69,32 +66,32 @@ function text.setAnchor(obj, value)
 end
 
 function text.getDimensions(obj)
-  local width, height = obj.texto.getDimensions()
+  local width, height = obj.texto:getDimensions()
 
   return width, height
 end
 
 local function newPosition(x, y, width, height, ancora)
   if(ancora == "c") then
-    x = x + width/2
-    y = y + height/2
+    x = x - width/2
+    y = y - height/2
   elseif(ancora == "n") then
-    x = x + width/2
+    x = x - width/2
   elseif(ancora == "s") then
-    x = x + width/2
-    y = y + height
+    x = x - width/2
+    y = y - height
   elseif(ancora == "e") then -- leste deveria ser letra l
-    x = x + width
-    y = y + height
+    x = x - width
+    y = y - height
   elseif(ancora == "o") then
-    y = y + height/2
+    y = y - height/2
   elseif(ancora == "ne") then
-    x = x + width
+    x = x - width
   elseif(ancora == "se") then
-    x = x + width
-    y = y + height
+    x = x - width
+    y = y - height
   elseif(ancora == "so") then
-    y = y + height
+    y = y - height
   end
 
   return x, y
@@ -103,10 +100,10 @@ end
 function text.draw(obj, x, y)
   love.graphics.push()
 
-  local width, height = obj.texto.getDimensions()
+  local width, height = obj.texto:getDimensions()
 
   x, y = newPosition(x, y, width, height, obj.ancora)
-  setColor(obj.cor)
+  love.graphics.setColor(obj.cor)
   love.graphics.draw(obj.texto, x, y)
 
   love.graphics.pop()

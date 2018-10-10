@@ -28,6 +28,15 @@ function text.setString(obj, str)
   obj.texto.set(str)
 end
 
+local function countTable()
+  local contador = 0
+  for _,_ in pairs(cores) do
+    contador = contador + 1
+  end
+  
+  return contador
+end
+
 local function setColorString(obj, str)
   if(cores.str ~= nil) then
     obj.cor = cores.str
@@ -36,7 +45,7 @@ local function setColorString(obj, str)
 
   if(str == "random") then
     local start = 1
-    local stop = math.random(6)
+    local stop = math.random(countTable())
 
     for k, v in pairs(cores) do
       if(start == stop) then

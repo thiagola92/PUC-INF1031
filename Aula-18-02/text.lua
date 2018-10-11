@@ -39,42 +39,54 @@ function text.new(fontname, tam, str)
 
   meutexto.texto = texto
   meutexto.cor = cores.black
+  meutexto.contorno = {0, 0, 0, 0}
+  meutexto.borda = {0, 0, 0, 0}
   meutexto.ancora = "no"
 
   return meutexto
 end
 
 function text.setString(obj, str)
-  obj.texto.set(str)
+  obj.texto:set(str)
 end
 
 local function setColorString(obj, str)
-  if(cores.str ~= nil) then
-    obj.cor = cores.str
-    return
-  end
-
   if(str == "random") then
     local i = math.random(#cores)
     local cor = cores[i]
-    obj.cor = cores[cor]
 
-    return
+    return cores[cor]
   end
 
-  obj.cor = cores.black
+  assert(cores[str], "cor inexistente")
+  return cores[str]
 end
 
 function text.setColor(obj, r, g, b)
   if(type(r) == "string") then
-    setColorString(obj, r)
+    obj.cor = setColorString(obj, r)
   else
     obj.cor = {r, g, b}
   end
 end
 
+function text.setFillColor(obj, r, g, b)
+  if(type(r) == "string") then
+    obj.contorno = setColorString(obj, r)
+  else
+    obj.contorno = {r, g, b}
+  end
+end
+
+function text.setLineColor(obj, r, g, b)
+  if(type(r) == "string") then
+    obj.borda = setColorString(obj, r)
+  else
+    obj.borda = {r, g, b}
+  end
+end
+
 function text.setAnchor(obj, value)
-  print(value, ancoras[value])
   assert(ancoras[value], "ancora invalida")
   obj.ancora = value
 end
@@ -85,42 +97,61 @@ function text.getDimensions(obj)
   return width, height
 end
 
-local function newPosition(x, y, width, height, ancora)
+local function translate(width, height, ancora)
+  local x, y = 0, 0
+
   if(ancora == "c") then
-    x = x - width/2
-    y = y - height/2
+    x = -width/2
+    y = -height/2
   elseif(ancora == "n") then
-    x = x - width/2
+    x = -width/2
   elseif(ancora == "s") then
-    x = x - width/2
-    y = y - height
+    x = -width/2
+    y = -height
   elseif(ancora == "e") then -- leste deveria ser letra l
-    x = x - width
-    y = y - height
+    x = -width
+    y = -height/2
   elseif(ancora == "o") then
-    y = y - height/2
+    y = -height/2
   elseif(ancora == "ne") then
-    x = x - width
+    x = -width
   elseif(ancora == "se") then
-    x = x - width
-    y = y - height
+    x = -width
+    y = -height
   elseif(ancora == "so") then
-    y = y - height
+    y = -height
   end
 
   return x, y
 end
 
+local function getColor()
+  local cor = love.graphics.getColor() -- retorna 1 quando você nunca usou setColor
+
+  if(type(cor) ~= "table") then
+    return {0, 0, 0, 0}
+  end
+
+  return cor
+end
+
 function text.draw(obj, x, y)
+  local backupcolor = getColor()
   love.graphics.push()
 
   local width, height = obj.texto:getDimensions()
+  local translate_x, translate_y = translate(width, height, obj.ancora)
 
-  x, y = newPosition(x, y, width, height, obj.ancora)
+  love.graphics.translate(translate_x, translate_y)
+  love.graphics.setColor(obj.contorno)
+  love.graphics.rectangle("fill", x, y, width, height)
+  love.graphics.setColor(obj.borda)
+  love.graphics.rectangle("line", x, y, width, height)
   love.graphics.setColor(obj.cor)
   love.graphics.draw(obj.texto, x, y)
 
   love.graphics.pop()
+  love.graphics.setColor(backupcolor)
 end
 
 return text

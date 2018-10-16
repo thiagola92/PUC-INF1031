@@ -16,7 +16,7 @@ function love.load()
                               end
                             end
                           end)
-  -- armazena palavras num vetor e 
+  -- armazena palavras num vetor e
   pals = {}
   for p, n in pairs(contapal) do
     pals[#pals+1] = p
@@ -24,7 +24,6 @@ function love.load()
 
   -- falta ordenar ordenar vetor
   table.sort(pals, function(a, b) return contapal[a] > contapal[b] end)
-  table.sort(contapal, function(a, b) return a > b end)
 
   -- mostra resultados
   max = math.min(10, #pals)
@@ -32,9 +31,9 @@ function love.load()
   for i = 1, max do
     print (pals[i], contapal[pals[i]])
   end
-  
+
   width, height = love.graphics.getDimensions()
-  
+
   paramostrar = {}
   for i = 1, max do
     local font = love.graphics.newFont("Arial.ttf", 64 - i*4)
@@ -46,7 +45,7 @@ function love.load()
       s = 2,
       text = text,
     }
-    
+
     paramostrar[i] = mostrar
   end
 end

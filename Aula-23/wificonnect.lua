@@ -5,7 +5,7 @@ end
 
 wificonf = {
   ssid = "wifiNameCaseSensitive",
-  pwd = "yourPassword",
+  pwd = "wifiPassword",
   got_ip_cb = wifi_connected_callback,
   save = false,
 }

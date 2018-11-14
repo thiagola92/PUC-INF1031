@@ -23,12 +23,12 @@ Agora você pode abrir mais que um ZeroBrane
 # ESPlorer
 Utilizaremos essa IDE para conectar com o NodeMCU e escrever programas para ele.  
 
-O link do download em seguida costuma falhar na primeira vez que você acessa (tente abrir duas vezes ou mais):  
+O link do **download** em seguida costuma falhar na primeira vez que você acessa (tente abrir duas vezes ou mais):  
 http://esp8266.ru/esplorer-latest/?f=ESPlorer.zip  
 
-A biblioteca do NodeMCU (lá você consegue ver as funções que o node possui e como funcionam):  
+A **biblioteca** do NodeMCU (lá você consegue ver as funções que o node possui e como funcionam):  
 https://nodemcu.readthedocs.io/en/master/  
 
 Conectar seu NodeMCU ao computador pode ser uma tarefa meio chata e complicada.  
-Eu documentei todos meus problemas e soluções em uma outra matéria que utilizei ele:  
+Eu documentei todos meus **problemas e soluções** em uma outra matéria que utilizei ele:  
 https://github.com/thiagola92/PUC-INF1805/blob/master/Aula-07/Exemplo-01/main.lua  

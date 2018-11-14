@@ -1,6 +1,6 @@
 msgr = require "mqttNodeMCULibrary"
 
-local minhamat = "1234"
+local minhamat = "1721629"
 local minhafileira = 2
 local minhaposicao = 4
 local sensor = 0
@@ -17,7 +17,11 @@ local function readlum()
   print(lum)
   -- mandar luminosidade pro servidor!
   -- compõe mensagem m
-  -- msgr.sendMessage(m, "luminosidadesala")
+  local m = "<reg><"
+  m = m .. minhafileira .. ","
+  m = m .. minhaposicao .. ","
+  m = m .. lum .. ">"
+  msgr.sendMessage(m, "luminosidade546")
 end
 
 gpio.mode(led1, gpio.OUTPUT)
@@ -37,7 +41,7 @@ function periodica ()
 end
 
 -- inicia servidor
--- msgr.start(minhamat) 
+msgr.start(minhamat) 
 
 if not tmr.create():alarm(5000, tmr.ALARM_AUTO, periodica) then
   print("erro na criação do alarme")

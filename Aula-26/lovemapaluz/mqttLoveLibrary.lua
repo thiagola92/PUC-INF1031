@@ -1,6 +1,6 @@
 mqttLove = require('mqtt')
 
-local HOST = '10.0.0.1' 
+local HOST = 'test.mosquitto.org'  
 local PORT = 1883
 
 local mqttClient

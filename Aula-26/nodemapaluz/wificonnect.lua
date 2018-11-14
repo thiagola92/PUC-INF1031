@@ -4,8 +4,8 @@ local function wifi_connected_callback(iptable)
 end
 
 wificonf = {
-  ssid = "DI-546L",
-  pwd = "dipucrio",
+  ssid = "Lages",
+  pwd = "Windowsseth",
   got_ip_cb = wifi_connected_callback,
   save = false,
 }

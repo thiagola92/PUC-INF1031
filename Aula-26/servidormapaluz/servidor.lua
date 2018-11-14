@@ -1,6 +1,6 @@
 msgr = require "mqttLoveLibrary"
 
-local minhamat = "123"
+local minhamat = "1721629" .. "servidor"
 local fileiras = 5
 local posicoes = 6
 local leituras = {}

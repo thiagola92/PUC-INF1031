@@ -1,6 +1,6 @@
 local MQTT = {}
 
-local HOST = '10.0.0.1' -- substitute for the ip adress of the broker host
+local HOST = 'test.mosquitto.org'  -- substitute for the ip adress of the broker host
 local PORT = 1883 -- default port, substitute if necessary
 
 local userId = nil
@@ -29,21 +29,21 @@ function mqttConnected()
   print('Connected to broker')
   local channel = channel or userId..'node'
   mqttClient:subscribe(channel,0,function(conn)
-    print('succesfuly subscribed to '.. channel) 
+    print('succesfuly subscribed to '.. channel)
   end)
 end
 
 function mqttConnect()
   local attempts = 3
 
-  function mqttcouldnotconnect (con,reason) 
+  function mqttcouldnotconnect (con,reason)
     print ("connection failed:")
-    if reason >= -5 and reason <= 5 then print (mqtterror[reason]) 
+    if reason >= -5 and reason <= 5 then print (mqtterror[reason])
     else print(reason) end
     attempts = attempts - 1
     if attempts>0 and not (reason==-1 or reason==-2) then
       print('new attempt to connect')
-      mqttClient:connect(HOST,PORT,0,0, mqttConnected, mqttcouldnotconnect) 
+      mqttClient:connect(HOST,PORT,0,0, mqttConnected, mqttcouldnotconnect)
     else
       print("giving up on broker")
     end
@@ -56,13 +56,13 @@ end
 --[[
   function to start the mqttClient. It connects to the broker and subscribes to a predefined channel.
   id: unique id for the user
-  callbackFunction: optional, function to be called when the application receives a message. 
+  callbackFunction: optional, function to be called when the application receives a message.
 ]]
 function MQTT.start(id, userchannel, callbackFunction)
   defaultTopic = id .. 'love' -- default topic for publishing
-  mqttClient = mqtt.Client(id .. 'node',120) 
+  mqttClient = mqtt.Client(id .. 'node',120)
   userId = id
-  callback = callbackFunction 
+  callback = callbackFunction
   channel = userchannel
   mqttClient:on("offline", function(client) print ("offline") end)
   mqttClient:on("message", function(client, topic, message)

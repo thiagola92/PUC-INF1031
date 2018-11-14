@@ -1,6 +1,6 @@
 msgr = require "mqttLoveLibrary"
 
-local minhamat = "012"
+local minhamat = "1721629"
 local meucanal = minhamat .. "love"
 local altura, largura
 local fileiras = 5
@@ -36,7 +36,9 @@ local function mensagemRecebida (msg)
 end
 
 function love.keypressed (key)
-  -- envia mensagem requisitando leituras de liminosidade
+  local m = "<req><"
+  m = m .. meucanal .. ">"
+  msgr.sendMessage(m,"luminosidade546")
 end
 
 function love.load ()

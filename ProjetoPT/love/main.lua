@@ -1,11 +1,13 @@
---msgr.sendMessage ("<req><" .. meucanal .. ">", "servidor546")
-
 msgr = require "mqttLoveLibrary"
+
+local MAX_ASTEROIDS = 20
 
 local id = "14214221721629"
 local server = "ProjetoPT"
 
+local time = love.timer.getTime()
 local players = {}
+local asteroids = {}
 
 local colors = {
   {1,1,0}, -- amarelo
@@ -15,6 +17,45 @@ local colors = {
   {1,1,1}  -- branco
 }
 
+
+
+function drawAsteroids()
+  love.graphics.setColor(139/255,69/255,19/255)
+  for i = 1, #asteroids do
+    love.graphics.circle("fill",asteroids[i].x,asteroids[i].y,asteroids[i].r)
+  end
+end
+
+function createAsteroids()
+  if #asteroids > MAX_ASTEROIDS then
+    return
+  end
+  
+  local timeNow = love.timer.getTime() - time
+  
+  math.randomseed(timeNow)
+  print(timeNow)
+  
+  asteroids[#asteroids + 1]={
+    x = love.graphics.getWidth() + math.random(0,750),
+    y = math.random(0,love.graphics.getHeight()),
+    r = math.random(20,35)    
+  }
+  
+  createAsteroids()
+end
+
+
+function moveAsteroids()
+  for i = #asteroids, 1, -1 do
+    asteroids[i].x = asteroids[i].x - 3
+    if asteroids[i].x < 0 then 
+     table.remove(asteroids,i)
+    end
+  end
+end
+
+
 function createPlayer(player)
   math.randomseed(os.time())
   
@@ -22,10 +63,17 @@ function createPlayer(player)
   
   players[player] = {
     x = 0,
-    y = love.graphics.getHeight,
+    y = love.graphics.getHeight(),
     color = colors[index]
   }
   
+end
+
+function drawPlayer()
+  for _, player in pairs(players) do
+    love.graphics.setColor(player.color)
+    love.graphics.circle("fill",player.x,player.y, 20)
+  end
 end
 
 local function mensagemRecebida (message)
@@ -42,6 +90,8 @@ local function mensagemRecebida (message)
   end
 end
 
+
+
 function love.load()
   msgr.start(id, server, mensagemRecebida) 
 end
@@ -51,4 +101,7 @@ function love.update()
 end
 
 function love.draw()
+  createAsteroids()
+  drawAsteroids()
+  moveAsteroids()
 end

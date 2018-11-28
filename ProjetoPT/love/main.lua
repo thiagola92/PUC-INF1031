@@ -6,6 +6,7 @@ local id = "14214221721629"
 local server = "ProjetoPT"
 
 local time = love.timer.getTime()
+local createPlanetTime  = time + 2.5
 local players = {}
 local asteroids = {}
 
@@ -16,8 +17,6 @@ local colors = {
   {0,0,1}, -- azul
   {1,1,1}  -- branco
 }
-
-
 
 function drawAsteroids()
   love.graphics.setColor(139/255,69/255,19/255)
@@ -31,10 +30,10 @@ function createAsteroids()
     return
   end
   
-  local timeNow = love.timer.getTime() - time
+  --local timeNow = love.timer.getTime() - time
   
-  math.randomseed(timeNow)
-  print(timeNow)
+  math.randomseed(love.timer.getTime())
+  print(love.timer.getTime())
   
   asteroids[#asteroids + 1]={
     x = love.graphics.getWidth() + math.random(0,750),
@@ -76,6 +75,23 @@ function drawPlayer()
   end
 end
 
+function createPlanet()
+  if createPlanetTime < love.timer.getTime() then
+    planet = {
+      x = love.graphics.getWidth() + 76,
+      y = love.graphics.getHeight()/2      
+    }    
+  end
+end
+
+function drawPlanet()
+  if planet ~= nil then
+    love.graphics.setColor(1,1,1)
+    love.graphics.circle("fill",planet.x,planet.y, 75)
+  end
+end
+
+
 local function mensagemRecebida (message)
   local player, button = string.match(message, "<(.*)><(.*)>")
   
@@ -90,8 +106,6 @@ local function mensagemRecebida (message)
   end
 end
 
-
-
 function love.load()
   msgr.start(id, server, mensagemRecebida) 
 end
@@ -104,4 +118,7 @@ function love.draw()
   createAsteroids()
   drawAsteroids()
   moveAsteroids()
+  drawPlayer()
+  createPlanet()
+  drawPlanet()
 end

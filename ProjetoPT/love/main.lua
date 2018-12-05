@@ -64,7 +64,7 @@ function createPlayer(player)
   
   players[player] = {
     x = 0,
-    y = love.graphics.getHeight(),
+    y = love.graphics.getHeight()/2,
     color = colors[index],
     playerDirection = 1,
     alive = true
@@ -179,6 +179,16 @@ local function mensagemRecebida (message)
   
 end
 
+local function reachBorder()
+  for key, playerContent in pairs(players) do
+    if players[key].y >= love.graphics.getHeight() then
+       players[key].playerDirection = -1
+    elseif players[key].y <= 0 then
+      players[key].playerDirection = 1      
+    end
+  end
+end
+
 function love.load()
   msgr.start(id, server, mensagemRecebida) 
 end
@@ -188,13 +198,15 @@ function love.update()
 end
 
 function love.draw()
+  createPlanet()
+  drawPlanet()
   createAsteroids()
   drawAsteroids()
   moveAsteroids()
   drawPlayer()
-  createPlanet()
-  drawPlanet()
+  
   playerAsteroidCollision()
   drawBullets()
   bulletAsteroidCollision()
+  reachBorder()
 end

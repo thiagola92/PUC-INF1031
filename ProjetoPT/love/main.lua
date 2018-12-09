@@ -9,7 +9,7 @@ local time = love.timer.getTime()
 local createPlanetTime  = time + 2.5
 local players = {}
 local asteroids = {}
-local planet = nil
+local planet = { alive = false }
 local bullets = {}
 
 local colors = {
@@ -49,7 +49,7 @@ end
 
 function moveAsteroids()
   for i = #asteroids, 1, -1 do
-    asteroids[i].x = asteroids[i].x - 3
+    asteroids[i].x = asteroids[i].x - 2
     if asteroids[i].x < 0 then 
      table.remove(asteroids,i)
     end
@@ -83,21 +83,21 @@ function drawPlayer()
 end
 
 function createPlanet()
-  if planet == nil then
-    if createPlanetTime < love.timer.getTime() then
-      planet = {
-        x = love.graphics.getWidth() + 76,
-        y = love.graphics.getHeight()/2      
-      }    
-    end
+  if planet.alive == false and createPlanetTime < love.timer.getTime() then
+    planet.x = love.graphics.getWidth() + 76
+    planet.y = love.graphics.getHeight()/2
+    planet.r = 75
+    planet.alive = true
   end
 end
 
 function drawPlanet()
-  if planet ~= nil then
+  if planet.alive == true then
     love.graphics.setColor(1,1,1)
-    love.graphics.circle("fill",planet.x,planet.y, 75)
-    planet.x = planet.x - 2
+    love.graphics.circle("fill",planet.x,planet.y, planet.r)
+    if planet.x > 0 then
+      planet.x = planet.x - 0.5
+    end
   end
 end
 
@@ -125,13 +125,25 @@ function playerAsteroidCollision()
   end
 end
 
+function playerPlanetCollision()
+  if(planet.alive == false) then
+    return
+  end
+  
+  for _, player in pairs(players) do
+    if circleCollision(player.x, player.y, 20, planet.x, planet.y, planet.r) and player.alive then
+      require("victory")
+    end
+  end
+end
+
+
 function bulletAsteroidCollision()
   for i = #bullets, 1, -1 do
     for j= #asteroids, 1, -1 do
       
       if(bullets[i] ~= nil) then
         if circleCollision(bullets[i].x, bullets[i].y, bullets[i].r, asteroids[j].x, asteroids[j].y, asteroids[j].r) then
-          print(bullets, i, bullets[i])
           table.remove(bullets, i)
           table.remove(asteroids, j)
         end
@@ -155,13 +167,15 @@ local function drawBullets()
 end
 
 local function createBullet(y)
-  local bullet = {
-    x = 0,
-    y = y,
-    r = 5
-  }
-  
-  table.insert(bullets, bullet)
+  for i = 0, -2, -1 do
+    local bullet = {
+      x = 15*i,
+      y = y,
+      r = 5
+    }
+    
+    table.insert(bullets, bullet)
+  end
 end
 
 local function mensagemRecebida (message)
@@ -171,9 +185,16 @@ local function mensagemRecebida (message)
     createPlayer(player)
   end
   
+  if(players[player].alive == false) then
+    return
+  end
+  
   if(button == "button1") then
     players[player].playerDirection = players[player].playerDirection * (-1)
-  elseif(button == "button2" and players[player].alive == true) then
+  elseif(button == "button2") then
+    createBullet(players[player].y)
+  elseif(button == "both") then
+    players[player].playerDirection = players[player].playerDirection * (-1)
     createBullet(players[player].y)
   end
   
@@ -195,18 +216,22 @@ end
 
 function love.update()
   msgr.checkMessages()
+  
+  createPlanet()
+  
+  createAsteroids()
+  moveAsteroids()
+  
+  playerAsteroidCollision()
+  playerPlanetCollision()
+  bulletAsteroidCollision()
+  
+  reachBorder()
 end
 
 function love.draw()
-  createPlanet()
   drawPlanet()
-  createAsteroids()
   drawAsteroids()
-  moveAsteroids()
   drawPlayer()
-  
-  playerAsteroidCollision()
   drawBullets()
-  bulletAsteroidCollision()
-  reachBorder()
 end

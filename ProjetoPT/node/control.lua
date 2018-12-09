@@ -7,7 +7,7 @@ local buttonPressed = {}
 local alarm = tmr.create()
 
 local server = "ProjetoPT"
-local player = 1
+--local player = 1
 
 buttonPressed[button1] = false
 buttonPressed[button2] = false
@@ -48,7 +48,7 @@ button1Down = function ()
   -- se o outro botão não foi apertado então chamamos o alarme daqui 500ms
   -- caso tenha sido, não precisamos chamar o alarme pois daqui a 500ms já vamos chamar activeButtons
   if(buttonPressed[button2] == false) then
-    alarm:register(300, tmr.ALARM_SINGLE, activeButtons)
+    alarm:register(250, tmr.ALARM_SINGLE, activeButtons)
     alarm:start()
   end
 end
@@ -59,7 +59,7 @@ button2Down = function ()
   buttonPressed[button2] = true
 
   if(buttonPressed[button1] == false) then
-    alarm:register(300, tmr.ALARM_SINGLE, activeButtons)
+    alarm:register(250, tmr.ALARM_SINGLE, activeButtons)
     alarm:start()
   end
 end
@@ -70,4 +70,4 @@ gpio.mode(button2, gpio.INT, gpio.PULLUP)
 gpio.trig(button1, "down", button1Down)
 gpio.trig(button2, "down", button2Down)
 
-simpleMQTT.start(server .. player)
+simpleMQTT.start(server .. player, server .. player, function() end)

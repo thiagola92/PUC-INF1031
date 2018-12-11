@@ -178,6 +178,16 @@ local function createBullet(y)
   end
 end
 
+local function reachBorder()
+  for key, playerContent in pairs(players) do
+    if players[key].y >= love.graphics.getHeight() then
+       players[key].playerDirection = -1
+    elseif players[key].y <= 0 then
+      players[key].playerDirection = 1      
+    end
+  end
+end
+
 local function mensagemRecebida (message)
   local player, button = string.match(message, "<(.*)><(.*)>")
   
@@ -200,18 +210,21 @@ local function mensagemRecebida (message)
   
 end
 
-local function reachBorder()
-  for key, playerContent in pairs(players) do
-    if players[key].y >= love.graphics.getHeight() then
-       players[key].playerDirection = -1
-    elseif players[key].y <= 0 then
-      players[key].playerDirection = 1      
-    end
-  end
-end
-
 function love.load()
   msgr.start(id, server, mensagemRecebida) 
+end
+
+function love.keypressed(key)
+  if key == "1" then
+    love.graphics.setColor(1,1,1)
+    require("extra1")
+  elseif key == "2" then
+    love.graphics.setColor(1,1,1)
+    require("extra2")
+  elseif key == "3" then
+    love.graphics.setColor(1,1,1)
+    require("extra3")
+  end
 end
 
 function love.update()
@@ -230,6 +243,7 @@ function love.update()
 end
 
 function love.draw()
+  print(hello)
   drawPlanet()
   drawAsteroids()
   drawPlayer()
